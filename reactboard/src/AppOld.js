@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Customer from './components/Customer'
+import Board from './components/Boards';
 import './App.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,19 +9,18 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import CustomerAdd from './components/CustomerAdd';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import InputBase from '@material-ui/core/InputBase';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
 
 const styles = theme => ({
   root: {
-    width: "100%",
+    width: '100%',
     minWidth: 1080
   },
   menu: {
@@ -101,64 +100,59 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      customers: '',
+      boards: '',
       completed: 0,
       searchKeyword: ''
     }
-    this.stateRefresh = this.stateRefresh.bind(this);
-    this.handleValueChange = this.handleValueChange.bind(this)
   }
 
-  stateRefresh() {
+  stateRefresh = () => {
     this.setState({
-      customers: '',
+      boards: '',
       completed: 0,
       searchKeyword: ''
     });
     this.callApi()
-      .then(res => this.setState({customers: res}))
+      .then(res => this.setState({boards: res}))
       .catch(err => console.log(err));
   }
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then(res => this.setState({customers: res}))
+      .then(res => this.setState({boards: res}))
       .catch(err => console.log(err));
   }
 
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
   callApi = async () => {
-    const response = await fetch('http://127.0.0.1:8000/customer');
+    const response = await fetch('http://127.0.0.1:8000/mdb_boards?act_type=content_inquery');
     const body = await response.json();
     return body;
   }
 
   progress = () => {
     const { completed } = this.state;
-    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  };
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1});
+  }
 
-  handleValueChange(e) {
+  handleValueChange = (e) => {
     let nextState = {};
-    nextState[e.target.name] = e.target.value;
+    nextState[e.target.title] = e.target.value;
     this.setState(nextState);
   }
 
   render() {
     const filteredComponents = (data) => {
       data = data.results.filter((c) => {
-          return c.name.indexOf(this.state.searchKeyword) > -1;
+        return c.title.indexOf(this.state.searchKeyword) > -1;
       });
+      
       return data.map((c) => {
-        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+        return <Board stateRefresh={this.stateRefresh} key={c.content_id} id={c.content_id} title={c.title} created_at={c.created_at} user_name={c.user_name}  /> 
       });
     }
     const { classes } = this.props;
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
+    const cellList = ["글번호", "제목", "등록일", "글쓴이"];
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -167,7 +161,7 @@ class App extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              고객 관리 시스템
+              React Maria Board
             </Typography>
             <div className={classes.grow} />
             <div className={classes.search}>
@@ -187,11 +181,8 @@ class App extends Component {
             </div>
           </Toolbar>
         </AppBar>
-        <div className={classes.menu}>
-          <CustomerAdd stateRefresh={this.stateRefresh} />
-        </div>
         <Paper className={classes.paper}>
-          <Table>
+          <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 {cellList.map(c => {
@@ -200,13 +191,13 @@ class App extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.customers ?
-                filteredComponents(this.state.customers) :
-                <TableRow>
-                  <TableCell colSpan="6" align="center">
-                    <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
-                  </TableCell>
-                </TableRow>
+              {this.state.boards ? 
+                filteredComponents(this.state.boards) :
+              <TableRow>
+                <TableCell colSpan="6" align="center">
+                  <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+                </TableCell>
+              </TableRow>
               }
             </TableBody>
           </Table>
