@@ -67,9 +67,9 @@ class CustomerAdd extends React.Component {
   }
 
   addCustomer(){
-    const url = '/api/customers';
+    const url = 'http://127.0.0.1:8000/customer';
     const formData = new FormData();
-    formData.append('image', this.state.file)
+    formData.append('image', this.state.file) 
     formData.append('name', this.state.userName)
     formData.append('birthday', this.state.birthday)
     formData.append('gender', this.state.gender)
