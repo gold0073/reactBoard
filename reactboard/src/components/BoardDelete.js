@@ -58,7 +58,7 @@ class BoardDelete extends React.Component {
 
     render() {
         return (
-            <div>
+            <div style={{display:'inline-block'}}>
                 <Button variant="contained" color="secondary" onClick={this.handleClickOpen}>
                     삭제
                 </Button>

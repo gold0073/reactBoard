@@ -12,8 +12,8 @@ class Boards extends React.Component {
                 <TableCell>{this.props.title}</TableCell>
                 <TableCell>{this.props.created_at}</TableCell>
                 <TableCell>{this.props.user_name}</TableCell>
-                <TableCell><BoardDetail stateRefresh={this.props.stateRefresh} id={this.props.id}/></TableCell>
-                <TableCell><BoardDelete stateRefresh={this.props.stateRefresh} id={this.props.id}/></TableCell>
+                <TableCell><BoardDetail stateRefresh={this.props.stateRefresh} id={this.props.id} title={this.props.title} context={this.props.context}/>
+                           <BoardDelete stateRefresh={this.props.stateRefresh} id={this.props.id}/></TableCell>
             </TableRow>
         )
     }

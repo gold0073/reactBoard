@@ -44,8 +44,8 @@ const styles = theme => ({
     fontSize: '1.0rem'
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginLeft: 0,
+    marginRight: 0,
   },
   title: {
     display: 'none',
@@ -154,11 +154,11 @@ class App extends Component {
           return c.title.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c) => {
-        return <Board stateRefresh={this.stateRefresh} key={c.content_id} id={c.content_id}  title={c.title} created_at={c.created_at} user_name={c.user_name} />
+        return <Board stateRefresh={this.stateRefresh} key={c.content_id} id={c.content_id}  title={c.title} context={c.context} created_at={c.created_at} user_name={c.user_name} />
       });
     }
     const { classes } = this.props;
-    const cellList = ["번호", "제목", "작성일", "작성자","",""]
+    const cellList = ["번호", "제목", "작성일", "작성자",""]
     return (
       <div className={classes.root}>
         <AppBar position="static">

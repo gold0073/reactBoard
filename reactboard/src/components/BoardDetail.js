@@ -21,13 +21,13 @@ class BoardDetail extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
-      context: '',
+      title: this.props.title,
+      context: this.props.context,
       open: false
     }
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleValueChange = this.handleValueChange.bind(this)
-    this.addBoardWrite = this.addBoardWrite.bind(this)
+    this.updateBoard = this.updateBoard.bind(this)
     this.handleClickOpen = this.handleClickOpen.bind(this)
     this.handleClose = this.handleClose.bind(this);
 
@@ -53,32 +53,20 @@ class BoardDetail extends React.Component {
     this.setState(nextState);
   }
 
-  addBoardWrite(){
+  updateBoard(id){
     const url = 'http://127.0.0.1:8000/mdb_boards';
     const qstring = qs.stringify({
-      user_id: '1',
+      content_id: id,
       title: this.state.title,
       context: this.state.context,
-      act_type : "content_create"
+      act_type : "content_update"
     });
 
-    return  post( url,qstring); 
+    return  post( url,qstring).then((response) => {
+      console.log(response.data);
+      this.props.stateRefresh();
+    });  
   }
-
-  /*
-  detailBoard(id){
-    const url = 'http://127.0.0.1:8000/mdb_boards';
-    const qstring = qs.stringify({
-        content_id: id,
-        act_type : "content_inquery"
-    });
-
-    post(url,qstring).then((response) => {
-        console.log(response.data);
-        this.props.stateRefresh();
-    }); 
-  }
-  */
 
   handleClickOpen() {
     this.setState({
@@ -88,8 +76,6 @@ class BoardDetail extends React.Component {
 
   handleClose() {
     this.setState({
-      title: '',
-      context: '',
       open: false
     })
   }
@@ -97,7 +83,7 @@ class BoardDetail extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-        <div >
+        <div style={{display:'inline-block'}}>
           <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
                     수정
           </Button>
@@ -116,7 +102,7 @@ class BoardDetail extends React.Component {
                fullWidth /><br/>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" color="primary" onClick={this.handleFormSubmit}>수정</Button>
+              <Button variant="contained" color="primary" onClick={(e) => {this.updateBoard(this.props.id)}}>수정</Button>
               <Button variant="outlined" color="primary" onClick={this.handleClose}>닫기</Button>
             </DialogActions>
           </Dialog>
