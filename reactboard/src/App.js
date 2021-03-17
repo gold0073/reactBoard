@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
 import BoardAdd from './components/BoardAdd';
+import BoardDetail from './components/BoardDetail';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -158,7 +159,7 @@ class App extends Component {
       });
     }
     const { classes } = this.props;
-    const cellList = ["번호", "제목", "작성일", "작성자",""]
+    const cellList = ["번호", "제목", "작성일", "작성자","",""]
     return (
       <div className={classes.root}>
         <AppBar position="static">

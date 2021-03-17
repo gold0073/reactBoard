@@ -13,10 +13,10 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
   hidden: {
     display: 'none',
-  },
+  }
 });
 
-class BoardAdd extends React.Component {
+class BoardDetail extends React.Component {
 
   constructor(props) {
     super(props);
@@ -30,6 +30,7 @@ class BoardAdd extends React.Component {
     this.addBoardWrite = this.addBoardWrite.bind(this)
     this.handleClickOpen = this.handleClickOpen.bind(this)
     this.handleClose = this.handleClose.bind(this);
+
   }
 
   handleFormSubmit(e) {
@@ -53,10 +54,7 @@ class BoardAdd extends React.Component {
   }
 
   addBoardWrite(){
-
-    
     const url = 'http://127.0.0.1:8000/mdb_boards';
-
     const qstring = qs.stringify({
       user_id: '1',
       title: this.state.title,
@@ -64,8 +62,23 @@ class BoardAdd extends React.Component {
       act_type : "content_create"
     });
 
-    return  post(url,qstring); 
+    return  post( url,qstring); 
   }
+
+  /*
+  detailBoard(id){
+    const url = 'http://127.0.0.1:8000/mdb_boards';
+    const qstring = qs.stringify({
+        content_id: id,
+        act_type : "content_inquery"
+    });
+
+    post(url,qstring).then((response) => {
+        console.log(response.data);
+        this.props.stateRefresh();
+    }); 
+  }
+  */
 
   handleClickOpen() {
     this.setState({
@@ -86,11 +99,10 @@ class BoardAdd extends React.Component {
     return (
         <div >
           <Button variant="contained" color="primary" onClick={this.handleClickOpen}>
-            작성
+                    수정
           </Button>
-
           <Dialog  open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle style={{width:550}} id="form-dialog-title">게시글 작성 <br />백앤드 비즈니스는 NodeJs로 작성된 마이크로 서비스를 활용.
+            <DialogTitle style={{width:550}} id="form-dialog-title">상세 <br />백앤드 비즈니스는 NodeJs로 작성된 마이크로 서비스를 활용.
             </DialogTitle>
             <DialogContent>
               <TextField fullWidth label="제목" type="text" name="title" value={this.state.title} onChange={this.handleValueChange} />
@@ -104,7 +116,7 @@ class BoardAdd extends React.Component {
                fullWidth /><br/>
             </DialogContent>
             <DialogActions>
-              <Button variant="contained" color="primary" onClick={this.handleFormSubmit}>추가</Button>
+              <Button variant="contained" color="primary" onClick={this.handleFormSubmit}>수정</Button>
               <Button variant="outlined" color="primary" onClick={this.handleClose}>닫기</Button>
             </DialogActions>
           </Dialog>
@@ -113,4 +125,4 @@ class BoardAdd extends React.Component {
     }
   }
 
-export default withStyles(styles)(BoardAdd)
+export default withStyles(styles)(BoardDetail)
