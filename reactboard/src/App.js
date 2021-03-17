@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Customer from './components/Customer'
+import Board from './components/Boards'
 import './App.css';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -9,7 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withStyles } from '@material-ui/core/styles';
-import CustomerAdd from './components/CustomerAdd';
+import BoardAdd from './components/BoardAdd';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -101,7 +101,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      customers: '',
+      borders: '',
       completed: 0,
       searchKeyword: ''
     }
@@ -111,19 +111,19 @@ class App extends Component {
 
   stateRefresh() {
     this.setState({
-      customers: '',
+      borders: '',
       completed: 0,
       searchKeyword: ''
     });
     this.callApi()
-      .then(res => this.setState({customers: res}))
+      .then(res => this.setState({borders: res}))
       .catch(err => console.log(err));
   }
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then(res => this.setState({customers: res}))
+      .then(res => this.setState({borders: res}))
       .catch(err => console.log(err));
   }
 
@@ -132,7 +132,7 @@ class App extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch('http://127.0.0.1:8000/customer');
+    const response = await fetch('http://127.0.0.1:8000/mdb_boards');
     const body = await response.json();
     return body;
   }
@@ -151,14 +151,14 @@ class App extends Component {
   render() {
     const filteredComponents = (data) => {
       data = data.results.filter((c) => {
-          return c.name.indexOf(this.state.searchKeyword) > -1;
+          return c.title.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c) => {
-        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+        return <Board stateRefresh={this.stateRefresh} key={c.content_id} id={c.content_id}  title={c.title} created_at={c.created_at} user_name={c.user_name} />
       });
     }
     const { classes } = this.props;
-    const cellList = ["번호", "프로필 이미지", "이름", "생년월일", "성별", "직업", "설정"]
+    const cellList = ["번호", "제목", "작성일", "작성자",""]
     return (
       <div className={classes.root}>
         <AppBar position="static">
@@ -167,7 +167,7 @@ class App extends Component {
               <MenuIcon />
             </IconButton>
             <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-              고객 관리 시스템
+              마이크로서비스 React Board
             </Typography>
             <div className={classes.grow} />
             <div className={classes.search}>
@@ -188,7 +188,7 @@ class App extends Component {
           </Toolbar>
         </AppBar>
         <div className={classes.menu}>
-          <CustomerAdd stateRefresh={this.stateRefresh} />
+          <BoardAdd stateRefresh={this.stateRefresh} />
         </div>
         <Paper className={classes.paper}>
           <Table>
@@ -200,8 +200,8 @@ class App extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.customers ?
-                filteredComponents(this.state.customers) :
+              {this.state.borders ?
+                filteredComponents(this.state.borders) :
                 <TableRow>
                   <TableCell colSpan="6" align="center">
                     <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
