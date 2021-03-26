@@ -22,7 +22,6 @@ import IconButton from '@material-ui/core/IconButton';
 const styles = theme => ({
   root: {
     width: "100%",
-    minWidth: 1080
   },
   menu: {
     marginTop: 15,
